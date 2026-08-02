@@ -34,7 +34,7 @@ on conflict (slug) do update set
 -- Couleurs
 -- -----------------------------------------------------------------------------
 -- `hex` = pastille affichée dans les filtres et le sélecteur de couleur.
--- Huit teintes sur neuf sont échantillonnées sur les photos des bagues.
+-- Les neuf teintes sont échantillonnées sur les photos des bagues.
 -- Deux écarts assumés :
 --   * blanc : sur la photo, la nacre est si réchauffée par l'éclairage
 --     (#EAD9CB) qu'une pastille fidèle se confondrait avec le fond du site ;
@@ -45,10 +45,9 @@ on conflict (slug) do update set
 --   * bleu foncé : la bague (#03164B) est bien plus sombre que les boucles
 --     (#082D7B). La pastille se cale entre les deux — au plus sombre elle ne
 --     se distinguerait plus du noir.
--- Argent reste à caler sur sa photo.
 insert into colors (slug, code, name, hex, position) values
   ('or',          'OR', 'Or',          '#F0C070', 1),
-  ('argent',      'AR', 'Argent',      '#C0C0C0', 2),
+  ('argent',      'AR', 'Argent',      '#D1CEC9', 2),
   ('bleu-fonce',  'BF', 'Bleu foncé',  '#0A2260', 3),
   ('bleu-clair',  'BC', 'Bleu clair',  '#A0B0B0', 4),
   ('marron',      'MA', 'Marron',      '#4F0201', 5),
@@ -189,7 +188,22 @@ from products p
      'Bracelet LINÉ à cinq trèfles, pierre jaune'),
     ('bracelet-bleu-clair',
      '/produits/bracelet-bleu-clair.webp',
-     'Bracelet LINÉ à cinq trèfles, pierre bleu clair')
+     'Bracelet LINÉ à cinq trèfles, pierre bleu clair'),
+    ('bracelet-bleu-fonce',
+     '/produits/bracelet-bleu-fonce.webp',
+     'Bracelet LINÉ à cinq trèfles, pierre bleu foncé'),
+    ('bracelet-marron',
+     '/produits/bracelet-marron.webp',
+     'Bracelet LINÉ à cinq trèfles, pierre rouge sombre'),
+    ('bracelet-noir',
+     '/produits/bracelet-noir.webp',
+     'Bracelet LINÉ à cinq trèfles, onyx noir'),
+    ('bague-argent',
+     '/produits/bague-argent.webp',
+     'Bague trèfle LINÉ, finition argent'),
+    ('boucles-d-oreilles-argent',
+     '/produits/boucles-d-oreilles-argent.webp',
+     'Boucles d''oreilles trèfle LINÉ, finition argent')
   ) as v (slug, url, alt) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
