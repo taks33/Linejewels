@@ -174,7 +174,22 @@ from products p
      'Boucles d''oreilles trèfle LINÉ, pierre rouge sombre'),
     ('boucles-d-oreilles-noir',
      '/produits/boucles-d-oreilles-noir.webp',
-     'Boucles d''oreilles trèfle LINÉ, onyx noir')
+     'Boucles d''oreilles trèfle LINÉ, onyx noir'),
+    ('bracelet-or',
+     '/produits/bracelet-or.webp',
+     'Bracelet LINÉ à cinq trèfles, finition or'),
+    ('bracelet-blanc',
+     '/produits/bracelet-blanc.webp',
+     'Bracelet LINÉ à cinq trèfles, nacre blanche'),
+    ('bracelet-rose',
+     '/produits/bracelet-rose.webp',
+     'Bracelet LINÉ à cinq trèfles, nacre rose'),
+    ('bracelet-jaune',
+     '/produits/bracelet-jaune.webp',
+     'Bracelet LINÉ à cinq trèfles, pierre jaune'),
+    ('bracelet-bleu-clair',
+     '/produits/bracelet-bleu-clair.webp',
+     'Bracelet LINÉ à cinq trèfles, pierre bleu clair')
   ) as v (slug, url, alt) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
