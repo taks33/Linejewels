@@ -206,7 +206,22 @@ from products p
      'Boucles d''oreilles trèfle LINÉ, finition argent'),
     ('bracelet-argent',
      '/produits/bracelet-argent.webp',
-     'Bracelet LINÉ à cinq trèfles, finition argent')
+     'Bracelet LINÉ à cinq trèfles, finition argent'),
+    ('collier-or',
+     '/produits/collier-or.webp',
+     'Collier LINÉ à cinq trèfles, finition or'),
+    ('collier-argent',
+     '/produits/collier-argent.webp',
+     'Collier LINÉ à cinq trèfles, finition argent'),
+    ('collier-blanc',
+     '/produits/collier-blanc.webp',
+     'Collier LINÉ à cinq trèfles, nacre blanche'),
+    ('collier-rose',
+     '/produits/collier-rose.webp',
+     'Collier LINÉ à cinq trèfles, nacre rose'),
+    ('collier-jaune',
+     '/produits/collier-jaune.webp',
+     'Collier LINÉ à cinq trèfles, pierre jaune')
   ) as v (slug, url, alt) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
