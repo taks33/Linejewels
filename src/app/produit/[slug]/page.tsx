@@ -23,8 +23,12 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
+  const placeholderStyle = product.color
+    ? { backgroundColor: `color-mix(in srgb, ${product.color.hex} 14%, #f4ede3)` }
+    : undefined;
+
   return (
-    <article className="grid gap-12 lg:grid-cols-2">
+    <article className="grid gap-16 lg:grid-cols-2">
       <div className="space-y-4">
         {product.images.length > 0 ? (
           product.images.map((image) => (
@@ -33,44 +37,46 @@ export default async function ProductPage({ params }: Props) {
               key={image.id}
               src={image.url}
               alt={image.alt ?? product.name}
-              className="w-full bg-white object-cover"
+              className="w-full border border-line bg-sand object-cover"
             />
           ))
         ) : (
           <div
-            className="flex aspect-square items-center justify-center bg-white text-xs uppercase tracking-widest text-black/30"
-            style={product.color ? { backgroundColor: `${product.color.hex}20` } : undefined}
+            className="flex aspect-square items-center justify-center border border-line bg-sand text-[0.65rem] uppercase tracking-[0.25em] text-muted/60"
+            style={placeholderStyle}
           >
             Photo à venir
           </div>
         )}
       </div>
 
-      <div className="space-y-8">
-        <header className="space-y-2">
+      <div className="space-y-10 lg:pt-6">
+        <header className="space-y-3">
           <Link
             href={`/boutique/${product.category.slug}`}
-            className="text-xs uppercase tracking-widest text-black/50"
+            className="text-[0.65rem] uppercase tracking-[0.25em] text-clay"
           >
             {product.category.name}
           </Link>
-          <h1 className="text-2xl uppercase tracking-[0.2em]">{product.name}</h1>
+          <h1 className="text-3xl">{product.name}</h1>
         </header>
 
         {product.siblings.length > 1 && (
-          <div className="space-y-2">
-            <p className="text-xs uppercase tracking-widest text-black/50">
+          <div className="space-y-3">
+            <p className="text-[0.65rem] uppercase tracking-[0.25em] text-muted">
               Couleur{product.color ? ` — ${product.color.name}` : ""}
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {product.siblings.map((sibling) => (
                 <Link
                   key={sibling.slug}
                   href={`/produit/${sibling.slug}`}
                   title={sibling.color.name}
                   aria-current={sibling.slug === product.slug ? "true" : undefined}
-                  className={`h-8 w-8 rounded-full border-2 ${
-                    sibling.slug === product.slug ? "border-black" : "border-black/15"
+                  className={`h-9 w-9 rounded-full border transition-transform hover:scale-110 ${
+                    sibling.slug === product.slug
+                      ? "border-ink ring-1 ring-ink ring-offset-2 ring-offset-cream"
+                      : "border-line"
                   }`}
                   style={{ backgroundColor: sibling.color.hex }}
                 >
@@ -83,7 +89,9 @@ export default async function ProductPage({ params }: Props) {
 
         <ProductPurchase product={product} />
 
-        {product.description && <p className="text-black/70">{product.description}</p>}
+        {product.description && (
+          <p className="border-t border-line pt-8 text-muted">{product.description}</p>
+        )}
       </div>
     </article>
   );

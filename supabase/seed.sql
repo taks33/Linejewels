@@ -1,5 +1,5 @@
 -- =============================================================================
--- Line — jeu de données catalogue au lancement
+-- LINÉ — jeu de données catalogue au lancement
 --
 --   4 catégories bijoux × 9 couleurs   = 36 fiches
 --   + 2 styles de lunettes de soleil   =  2 fiches
@@ -19,11 +19,11 @@
 -- Catégories
 -- -----------------------------------------------------------------------------
 insert into categories (slug, code, name, singular_name, description, has_colors, position) values
-  ('bagues',             'BAG', 'Bagues',              'Bague',              'Bagues Line, à porter seules ou empilées.',        true,  1),
-  ('bracelets',          'BRA', 'Bracelets',           'Bracelet',           'Bracelets Line, fins et portables au quotidien.',  true,  2),
-  ('colliers',           'COL', 'Colliers',            'Collier',            'Colliers Line, chaînes et pendentifs.',            true,  3),
-  ('boucles-d-oreilles', 'BOU', 'Boucles d''oreilles', 'Boucles d''oreilles','Boucles d''oreilles Line, discrètes ou statement.', true,  4),
-  ('lunettes-de-soleil', 'LUN', 'Lunettes de soleil',  'Lunettes de soleil', 'Deux montures solaires signées Line.',             false, 5)
+  ('bagues',             'BAG', 'Bagues',              'Bague',              'Bagues LINÉ, à porter seules ou empilées.',        true,  1),
+  ('bracelets',          'BRA', 'Bracelets',           'Bracelet',           'Bracelets LINÉ, fins et portables au quotidien.',  true,  2),
+  ('colliers',           'COL', 'Colliers',            'Collier',            'Colliers LINÉ, chaînes et pendentifs.',            true,  3),
+  ('boucles-d-oreilles', 'BOU', 'Boucles d''oreilles', 'Boucles d''oreilles','Boucles d''oreilles LINÉ, discrètes ou statement.', true,  4),
+  ('lunettes-de-soleil', 'LUN', 'Lunettes de soleil',  'Lunettes de soleil', 'Deux montures solaires signées LINÉ.',             false, 5)
 on conflict (slug) do update set
   code          = excluded.code,
   name          = excluded.name,
@@ -85,7 +85,7 @@ select
   c.singular_name || ' ' || lower(col.name),
   c.id,
   col.id,
-  c.singular_name || ' Line, finition ' || lower(col.name) || '. Description à compléter.',
+  c.singular_name || ' LINÉ, finition ' || lower(col.name) || '. Description à compléter.',
   0,
   'active',
   c.position * 100 + col.position
@@ -107,8 +107,8 @@ insert into products (slug, name, category_id, color_id, description, price_cent
 select v.slug, v.name, c.id, null, v.description, 0, 'active', c.position * 100 + v.pos
 from categories c
   join (values
-    ('lunettes-de-soleil-style-1', 'Lunettes de soleil — Style 1', 'Monture solaire Line, style 1. Description à compléter.', 1),
-    ('lunettes-de-soleil-style-2', 'Lunettes de soleil — Style 2', 'Monture solaire Line, style 2. Description à compléter.', 2)
+    ('lunettes-de-soleil-style-1', 'Lunettes de soleil — Style 1', 'Monture solaire LINÉ, style 1. Description à compléter.', 1),
+    ('lunettes-de-soleil-style-2', 'Lunettes de soleil — Style 2', 'Monture solaire LINÉ, style 2. Description à compléter.', 2)
   ) as v (slug, name, description, pos) on true
 where c.slug = 'lunettes-de-soleil'
 on conflict (slug) do update set

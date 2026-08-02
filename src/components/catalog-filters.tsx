@@ -28,11 +28,15 @@ export function CatalogFilters({ categories, colors, activeCategory, activeColor
   };
 
   return (
-    <div className="space-y-6">
-      <nav className="flex flex-wrap gap-3 text-sm uppercase tracking-widest">
+    <div className="space-y-6 border-y border-line py-6">
+      <nav className="flex flex-wrap gap-2 text-xs uppercase tracking-[0.2em]">
         <Link
           href="/boutique"
-          className={`border px-4 py-2 ${activeCategory ? "border-black/15" : "border-black"}`}
+          className={`border px-5 py-2.5 transition-colors ${
+            activeCategory
+              ? "border-line text-muted hover:border-clay hover:text-ink"
+              : "border-ink bg-ink text-cream"
+          }`}
         >
           Tout
         </Link>
@@ -40,8 +44,10 @@ export function CatalogFilters({ categories, colors, activeCategory, activeColor
           <Link
             key={category.id}
             href={`/boutique/${category.slug}`}
-            className={`border px-4 py-2 ${
-              activeCategory === category.slug ? "border-black" : "border-black/15"
+            className={`border px-5 py-2.5 transition-colors ${
+              activeCategory === category.slug
+                ? "border-ink bg-ink text-cream"
+                : "border-line text-muted hover:border-clay hover:text-ink"
             }`}
           >
             {category.name}
@@ -49,8 +55,8 @@ export function CatalogFilters({ categories, colors, activeCategory, activeColor
         ))}
       </nav>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs uppercase tracking-widest text-black/50">Couleur</span>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="mr-2 text-[0.65rem] uppercase tracking-[0.25em] text-muted">Couleur</span>
         {colors.map((color) => {
           const isActive = activeColors.includes(color.slug);
           return (
@@ -58,14 +64,15 @@ export function CatalogFilters({ categories, colors, activeCategory, activeColor
               key={color.id}
               href={colorHref(color.slug)}
               aria-pressed={isActive}
-              title={color.name}
-              className={`flex items-center gap-2 rounded-full border px-3 py-1 text-xs ${
-                isActive ? "border-black" : "border-black/15"
+              className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                isActive
+                  ? "border-clay bg-dune text-ink"
+                  : "border-line text-muted hover:border-clay hover:text-ink"
               }`}
             >
               <span
                 aria-hidden
-                className="h-3 w-3 rounded-full border border-black/20"
+                className="h-3 w-3 rounded-full border border-ink/15"
                 style={{ backgroundColor: color.hex }}
               />
               {color.name}
@@ -73,7 +80,7 @@ export function CatalogFilters({ categories, colors, activeCategory, activeColor
           );
         })}
         {activeColors.length > 0 && (
-          <Link href={basePath} className="text-xs underline">
+          <Link href={basePath} className="ml-2 text-xs text-clay underline underline-offset-4">
             Effacer
           </Link>
         )}

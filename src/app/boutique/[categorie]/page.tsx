@@ -35,8 +35,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   return (
     <div className="space-y-10">
       <header className="space-y-2">
-        <h1 className="text-2xl uppercase tracking-[0.2em]">{category.name}</h1>
-        {category.description && <p className="text-black/60">{category.description}</p>}
+        <h1 className="text-3xl">{category.name}</h1>
+        {category.description && <p className="max-w-xl text-muted">{category.description}</p>}
       </header>
       <CatalogFilters
         categories={categories}

@@ -1,5 +1,5 @@
 -- =============================================================================
--- Line — schéma catalogue produits
+-- LINÉ — schéma catalogue produits
 -- Catégories, couleurs, tailles, produits, variantes, images.
 --
 -- Modèle retenu :

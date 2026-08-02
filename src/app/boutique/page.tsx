@@ -22,7 +22,12 @@ export default async function BoutiquePage({
 
   return (
     <div className="space-y-10">
-      <h1 className="text-2xl uppercase tracking-[0.2em]">Boutique</h1>
+      <header className="space-y-2">
+        <h1 className="text-3xl">Boutique</h1>
+        <p className="text-sm text-muted">
+          {products.length} pièce{products.length > 1 ? "s" : ""}
+        </p>
+      </header>
       <CatalogFilters categories={categories} colors={colors} activeColors={activeColors} />
       <ProductGrid products={products} />
     </div>

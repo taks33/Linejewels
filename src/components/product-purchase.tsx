@@ -16,12 +16,12 @@ export function ProductPurchase({ product }: { product: ProductDetail }) {
   const priceCents = selectedVariant?.price_cents ?? product.price_cents;
 
   return (
-    <div className="space-y-6">
-      <p className="text-lg">{formatPrice(priceCents, product.currency)}</p>
+    <div className="space-y-8">
+      <p className="text-2xl font-light">{formatPrice(priceCents, product.currency)}</p>
 
       {hasSizes && (
-        <fieldset className="space-y-2">
-          <legend className="text-xs uppercase tracking-widest text-black/50">Taille</legend>
+        <fieldset className="space-y-3">
+          <legend className="text-[0.65rem] uppercase tracking-[0.25em] text-muted">Taille</legend>
           <div className="flex flex-wrap gap-2">
             {product.variants.map((variant) => (
               <button
@@ -29,8 +29,10 @@ export function ProductPurchase({ product }: { product: ProductDetail }) {
                 type="button"
                 onClick={() => setVariantId(variant.id)}
                 aria-pressed={variant.id === variantId}
-                className={`border px-4 py-2 text-sm ${
-                  variant.id === variantId ? "border-black" : "border-black/15"
+                className={`min-w-12 border px-4 py-2.5 text-sm transition-colors ${
+                  variant.id === variantId
+                    ? "border-ink bg-ink text-cream"
+                    : "border-line text-muted hover:border-clay hover:text-ink"
                 }`}
               >
                 {variant.size?.label}
@@ -40,21 +42,23 @@ export function ProductPurchase({ product }: { product: ProductDetail }) {
         </fieldset>
       )}
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         <button
           type="button"
           disabled
-          className="w-full border border-black bg-black px-6 py-3 text-sm uppercase tracking-widest text-white disabled:opacity-40"
+          className="w-full bg-night px-6 py-4 text-xs uppercase tracking-[0.25em] text-cream transition-colors hover:bg-ink disabled:cursor-not-allowed disabled:bg-dune disabled:text-muted"
         >
           Ajouter au panier
         </button>
-        <p className="text-xs text-black/50">
+        <p className="text-xs text-muted">
           Panier et paiement Stripe : prochaine étape du chantier.
         </p>
       </div>
 
       {selectedVariant && (
-        <p className="text-xs text-black/40">Réf. {selectedVariant.sku}</p>
+        <p className="text-[0.65rem] uppercase tracking-[0.2em] text-muted/70">
+          Réf. {selectedVariant.sku}
+        </p>
       )}
     </div>
   );
