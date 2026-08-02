@@ -42,11 +42,14 @@ on conflict (slug) do update set
 --   * marron : la pierre photographiée est un rouge sombre (cornaline), pas
 --     un brun. La pastille suit la photo ; c'est le libellé « Marron » qui
 --     reste à trancher.
+--   * bleu foncé : la bague (#03164B) est bien plus sombre que les boucles
+--     (#082D7B). La pastille se cale entre les deux — au plus sombre elle ne
+--     se distinguerait plus du noir.
 -- Argent reste à caler sur sa photo.
 insert into colors (slug, code, name, hex, position) values
   ('or',          'OR', 'Or',          '#F0C070', 1),
   ('argent',      'AR', 'Argent',      '#C0C0C0', 2),
-  ('bleu-fonce',  'BF', 'Bleu foncé',  '#001048', 3),
+  ('bleu-fonce',  'BF', 'Bleu foncé',  '#0A2260', 3),
   ('bleu-clair',  'BC', 'Bleu clair',  '#A0B0B0', 4),
   ('marron',      'MA', 'Marron',      '#4F0201', 5),
   ('rose',        'RO', 'Rose',        '#E8A8A8', 6),
@@ -162,7 +165,16 @@ from products p
      'Boucles d''oreilles trèfle LINÉ, pierre jaune'),
     ('boucles-d-oreilles-bleu-clair',
      '/produits/boucles-d-oreilles-bleu-clair.webp',
-     'Boucles d''oreilles trèfle LINÉ, pierre bleu clair')
+     'Boucles d''oreilles trèfle LINÉ, pierre bleu clair'),
+    ('boucles-d-oreilles-bleu-fonce',
+     '/produits/boucles-d-oreilles-bleu-fonce.webp',
+     'Boucles d''oreilles trèfle LINÉ, pierre bleu foncé'),
+    ('boucles-d-oreilles-marron',
+     '/produits/boucles-d-oreilles-marron.webp',
+     'Boucles d''oreilles trèfle LINÉ, pierre rouge sombre'),
+    ('boucles-d-oreilles-noir',
+     '/produits/boucles-d-oreilles-noir.webp',
+     'Boucles d''oreilles trèfle LINÉ, onyx noir')
   ) as v (slug, url, alt) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
