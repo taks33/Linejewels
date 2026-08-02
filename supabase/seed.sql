@@ -147,7 +147,22 @@ from products p
     ('bague-bleu-fonce', '/produits/bague-bleu-fonce.webp', 'Bague trèfle LINÉ, laque bleu foncé'),
     ('bague-jaune',      '/produits/bague-jaune.webp',      'Bague trèfle LINÉ, pierre jaune ambre'),
     ('bague-noir',       '/produits/bague-noir.webp',       'Bague trèfle LINÉ, onyx noir'),
-    ('bague-marron',     '/produits/bague-marron.webp',     'Bague trèfle LINÉ, pierre rouge sombre')
+    ('bague-marron',     '/produits/bague-marron.webp',     'Bague trèfle LINÉ, pierre rouge sombre'),
+    ('boucles-d-oreilles-or',
+     '/produits/boucles-d-oreilles-or.webp',
+     'Boucles d''oreilles trèfle LINÉ, finition or'),
+    ('boucles-d-oreilles-blanc',
+     '/produits/boucles-d-oreilles-blanc.webp',
+     'Boucles d''oreilles trèfle LINÉ, nacre blanche'),
+    ('boucles-d-oreilles-rose',
+     '/produits/boucles-d-oreilles-rose.webp',
+     'Boucles d''oreilles trèfle LINÉ, nacre rose'),
+    ('boucles-d-oreilles-jaune',
+     '/produits/boucles-d-oreilles-jaune.webp',
+     'Boucles d''oreilles trèfle LINÉ, pierre jaune'),
+    ('boucles-d-oreilles-bleu-clair',
+     '/produits/boucles-d-oreilles-bleu-clair.webp',
+     'Boucles d''oreilles trèfle LINÉ, pierre bleu clair')
   ) as v (slug, url, alt) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url

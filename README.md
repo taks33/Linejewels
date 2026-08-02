@@ -23,7 +23,7 @@ Avec la CLI Supabase liée au projet :
 
 ```bash
 supabase db push                                     # applique les migrations
-psql "$SUPABASE_DB_URL" -f supabase/seed.sql         # 38 produits, 38 variantes, 8 photos
+psql "$SUPABASE_DB_URL" -f supabase/seed.sql         # 38 produits, 38 variantes, 13 photos
 ```
 
 En local (`supabase start`), `supabase db reset` rejoue migrations + seed d'un coup.
@@ -33,8 +33,8 @@ Ce que contient le catalogue au lancement :
 
 - 4 catégories bijoux × 9 couleurs = **36 fiches**, plus **2 fiches lunettes** = 38 produits
 - tout en **taille unique** : une variante achetable par fiche, soit 38 variantes
-- **8 photos** : toutes les bagues sauf l'argent, servies depuis
-  `public/produits/`
+- **13 photos** : 8 bagues sur 9 (il manque l'argent) et 5 boucles d'oreilles sur 9,
+  servies depuis `public/produits/`
 - **tous les prix à 0 €** — placeholder à remplacer avant l'ouverture
 
 ## Direction artistique
@@ -86,5 +86,5 @@ docs/schema.md                   Modèle de données
 - [ ] Tables `orders` / `order_items` / clients, rattachées à `auth.users`
 - [ ] Compte client : connexion Supabase Auth, historique de commandes
 - [ ] Pages Contact, À propos, Mentions légales, CGV
-- [ ] Photos des 30 produits restants, et bascule des photos vers Supabase Storage
+- [ ] Photos des 25 produits restants, et bascule des photos vers Supabase Storage
 - [ ] Synchronisation catalogue → Stripe (`stripe_product_id`, `stripe_price_id`)
