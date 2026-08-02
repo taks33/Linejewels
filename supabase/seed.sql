@@ -221,7 +221,19 @@ from products p
      'Collier LINÉ à cinq trèfles, nacre rose'),
     ('collier-jaune',
      '/produits/collier-jaune.webp',
-     'Collier LINÉ à cinq trèfles, pierre jaune')
+     'Collier LINÉ à cinq trèfles, pierre jaune'),
+    ('collier-bleu-clair',
+     '/produits/collier-bleu-clair.webp',
+     'Collier LINÉ à cinq trèfles, pierre bleu clair'),
+    ('collier-bleu-fonce',
+     '/produits/collier-bleu-fonce.webp',
+     'Collier LINÉ à cinq trèfles, pierre bleu foncé'),
+    ('collier-marron',
+     '/produits/collier-marron.webp',
+     'Collier LINÉ à cinq trèfles, pierre rouge sombre'),
+    ('collier-noir',
+     '/produits/collier-noir.webp',
+     'Collier LINÉ à cinq trèfles, onyx noir')
   ) as v (slug, url, alt) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
