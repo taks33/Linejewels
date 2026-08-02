@@ -203,7 +203,10 @@ from products p
      'Bague trèfle LINÉ, finition argent'),
     ('boucles-d-oreilles-argent',
      '/produits/boucles-d-oreilles-argent.webp',
-     'Boucles d''oreilles trèfle LINÉ, finition argent')
+     'Boucles d''oreilles trèfle LINÉ, finition argent'),
+    ('bracelet-argent',
+     '/produits/bracelet-argent.webp',
+     'Bracelet LINÉ à cinq trèfles, finition argent')
   ) as v (slug, url, alt) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url

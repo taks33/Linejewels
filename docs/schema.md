@@ -45,7 +45,7 @@ vers les produits de la même catégorie (`ProductDetail.siblings`).
 | `category_sizes` | Quelles tailles pour quelle catégorie. Aucune aujourd'hui. | 0 |
 | `products` | Une fiche. `category_id` + `color_id` (NULL pour les lunettes). | 38 |
 | `product_variants` | Ce qu'on met au panier. `size_id` NULL = variante unique. | 38 |
-| `product_images` | Photos, `is_primary` pour la vignette de la grille. | 26 |
+| `product_images` | Photos, `is_primary` pour la vignette de la grille. | 27 |
 
 Les tailles restent modélisées sans être utilisées. C'est volontaire : le jour où une
 catégorie sera déclinée en tailles, il suffit d'ajouter des lignes dans `sizes` et
@@ -59,7 +59,7 @@ la fiche, sans toucher au schéma ni au front.
   vaut `NULL` par défaut = « hérite de la fiche ».
 - **SKU** composés depuis les codes courts : `LJ-<catégorie>-<couleur>[-<taille>]`,
   ex. `LJ-BAG-OR`, `LJ-COL-NO`, `LJ-LUN-01`.
-- **Photos** : les 26 pièces photographiées (bagues, boucles d'oreilles, bracelets) sont
+- **Photos** : les 27 pièces photographiées (bagues, bracelets, boucles d'oreilles) sont
   servies depuis `public/produits/`.
   `product_images.url` accepte aussi bien ce chemin qu'une URL absolue : le passage à
   Supabase Storage ne changera que la valeur stockée.
