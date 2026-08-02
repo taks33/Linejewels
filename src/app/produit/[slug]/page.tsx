@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductPurchase } from "@/components/product-purchase";
@@ -31,14 +32,20 @@ export default async function ProductPage({ params }: Props) {
     <article className="grid gap-16 lg:grid-cols-2">
       <div className="space-y-4">
         {product.images.length > 0 ? (
-          product.images.map((image) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+          product.images.map((image, index) => (
+            <div
               key={image.id}
-              src={image.url}
-              alt={image.alt ?? product.name}
-              className="w-full border border-line bg-sand object-cover"
-            />
+              className="relative aspect-square overflow-hidden border border-line bg-sand"
+            >
+              <Image
+                src={image.url}
+                alt={image.alt ?? product.name}
+                fill
+                priority={index === 0}
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
           ))
         ) : (
           <div

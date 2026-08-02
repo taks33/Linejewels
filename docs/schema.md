@@ -6,7 +6,8 @@ Données de départ : [`supabase/seed.sql`](../supabase/seed.sql)
 ## Le modèle en une phrase
 
 Un **produit** est un couple *catégorie × couleur* (une fiche = « Bague or »), une
-**variante** est la déclinaison achetable de cette fiche (la taille, pour les bagues).
+**variante** est la déclinaison achetable de cette fiche. Tout le catalogue étant en
+taille unique, chaque fiche a aujourd'hui exactement une variante.
 
 ```mermaid
 erDiagram
@@ -40,14 +41,16 @@ vers les produits de la même catégorie (`ProductDetail.siblings`).
 | --- | --- | --- |
 | `categories` | Rubriques (4 bijoux + lunettes). `has_colors` dit si la catégorie est déclinée en couleurs. | 5 |
 | `colors` | Les 9 couleurs, avec `hex` pour les pastilles de filtre. | 9 |
-| `sizes` | Tailles génériques (52 → 60). | 9 |
-| `category_sizes` | Quelles tailles pour quelle catégorie. Aujourd'hui : bagues seulement. | 9 |
+| `sizes` | Tailles génériques. Aucune aujourd'hui : tout est en taille unique. | 0 |
+| `category_sizes` | Quelles tailles pour quelle catégorie. Aucune aujourd'hui. | 0 |
 | `products` | Une fiche. `category_id` + `color_id` (NULL pour les lunettes). | 38 |
-| `product_variants` | Ce qu'on met au panier. `size_id` NULL = variante unique. | 110 |
-| `product_images` | Photos, `is_primary` pour la vignette de la grille. | 0 |
+| `product_variants` | Ce qu'on met au panier. `size_id` NULL = variante unique. | 38 |
+| `product_images` | Photos, `is_primary` pour la vignette de la grille. | 5 |
 
-Décompte des variantes : bagues 9 couleurs × 9 tailles = 81, plus 29 produits à
-variante unique (27 bijoux + 2 lunettes) = 110.
+Les tailles restent modélisées sans être utilisées. C'est volontaire : le jour où une
+catégorie sera déclinée en tailles, il suffit d'ajouter des lignes dans `sizes` et
+`category_sizes` et une variante par taille — le sélecteur apparaît alors tout seul sur
+la fiche, sans toucher au schéma ni au front.
 
 ## Points à connaître
 
@@ -55,7 +58,10 @@ variante unique (27 bijoux + 2 lunettes) = 110.
   fiche ; `product_variants.price_cents` peut le surcharger (une taille plus chère) et
   vaut `NULL` par défaut = « hérite de la fiche ».
 - **SKU** composés depuis les codes courts : `LJ-<catégorie>-<couleur>[-<taille>]`,
-  ex. `LJ-BAG-OR-52`, `LJ-COL-NO`, `LJ-LUN-01`.
+  ex. `LJ-BAG-OR`, `LJ-COL-NO`, `LJ-LUN-01`.
+- **Photos** : les 5 bagues photographiées sont servies depuis `public/produits/`.
+  `product_images.url` accepte aussi bien ce chemin qu'une URL absolue : le passage à
+  Supabase Storage ne changera que la valeur stockée.
 - **Unicité** : index partiel sur `(category_id, color_id)` — impossible d'avoir deux
   fiches « Collier noir ». Index `nulls not distinct` sur `(product_id, size_id)` —
   une seule variante par taille, et une seule variante sans taille.
@@ -71,6 +77,9 @@ variante unique (27 bijoux + 2 lunettes) = 110.
 ## Faire évoluer le schéma
 
 Ajouter une couleur : une ligne dans `colors`, puis une fiche par catégorie
-(`products`) et sa variante. Ajouter des tailles à une autre catégorie : des lignes
-dans `sizes` (si besoin) et dans `category_sizes` — le sélecteur de taille de la fiche
-apparaît automatiquement dès qu'une variante porte une taille.
+(`products`) et sa variante. Introduire des tailles : des lignes dans `sizes`, le
+rattachement dans `category_sizes`, et une variante par taille — le sélecteur de taille
+de la fiche apparaît automatiquement dès qu'une variante porte une taille.
+
+Ajouter une photo : une ligne dans `product_images` (`is_primary` pour la vignette de
+grille, `position` pour l'ordre sur la fiche).

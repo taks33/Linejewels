@@ -6,12 +6,16 @@
 --   * un PRODUIT = une catégorie × une couleur  (ex. « Bague or »)
 --     -> 4 catégories bijoux × 9 couleurs = 36 fiches
 --     -> + 2 fiches lunettes de soleil (sans couleur) = 38 produits
---   * une VARIANTE = la déclinaison achetable d'un produit (taille)
---     -> bagues : 9 tailles (52 → 60), soit 81 variantes
---     -> autres produits : 1 variante unique (size_id NULL)
+--   * une VARIANTE = la déclinaison achetable d'un produit
+--     -> aujourd'hui tout est en taille unique : 1 variante par fiche
+--        (size_id NULL), soit 38 variantes
 --
 -- Le sélecteur de couleur d'une fiche produit navigue entre les produits
--- frères de la même catégorie ; le sélecteur de taille choisit une variante.
+-- frères de la même catégorie.
+--
+-- Les tailles (`sizes` / `category_sizes`) restent modélisées mais ne sont pas
+-- utilisées : aucune catégorie n'en déclare. Dès qu'une catégorie recevra des
+-- tailles et ses variantes correspondantes, le sélecteur apparaîtra sur la fiche.
 -- =============================================================================
 
 create extension if not exists "pgcrypto";
@@ -76,12 +80,12 @@ create table if not exists colors (
 create index if not exists colors_position_idx on colors (position);
 
 -- -----------------------------------------------------------------------------
--- Tailles (bagues 52 → 60 aujourd'hui, extensible aux autres catégories)
+-- Tailles (aucune aujourd'hui — mécanisme prêt pour une future catégorie)
 -- -----------------------------------------------------------------------------
 create table if not exists sizes (
   id         uuid primary key default gen_random_uuid(),
-  slug       text not null unique,           -- « 52 »
-  label      text not null,                  -- « 52 » (affichage)
+  slug       text not null unique,           -- ex. « 52 »
+  label      text not null,                  -- ex. « 52 » (affichage)
   position   integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -132,14 +136,14 @@ create index if not exists products_color_idx on products (color_id);
 create index if not exists products_status_idx on products (status);
 
 -- -----------------------------------------------------------------------------
--- Variantes (déclinaison achetable : taille pour les bagues, unique sinon)
+-- Variantes (déclinaison achetable ; taille unique aujourd'hui)
 -- -----------------------------------------------------------------------------
 create table if not exists product_variants (
   id              uuid primary key default gen_random_uuid(),
   product_id      uuid not null references products (id) on delete cascade,
   -- NULL = variante unique (produit sans taille)
   size_id         uuid references sizes (id) on delete restrict,
-  sku             text not null unique,      -- « LJ-BAG-OR-52 »
+  sku             text not null unique,      -- « LJ-BAG-OR »
   -- NULL = hérite de products.price_cents
   price_cents     integer check (price_cents >= 0),
   stock           integer not null default 0 check (stock >= 0),

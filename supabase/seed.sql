@@ -6,10 +6,8 @@
 --                                        --------
 --                                        38 produits
 --
---   Bagues : 9 tailles (52 → 60) → 81 variantes
---   Autres : 1 variante unique   → 29 variantes
---                                  ------------
---                                  110 variantes
+--   Tous les produits sont en taille unique : 1 variante par fiche,
+--   soit 38 variantes. (Les bagues aussi : pas de tailles 52 → 60.)
 --
 -- Tous les prix sont à 0 € (placeholder, à mettre à jour avant ouverture).
 -- Script idempotent : peut être rejoué sans dupliquer de données.
@@ -35,15 +33,21 @@ on conflict (slug) do update set
 -- -----------------------------------------------------------------------------
 -- Couleurs
 -- -----------------------------------------------------------------------------
+-- `hex` = pastille affichée dans les filtres et le sélecteur de couleur.
+-- Or, bleu foncé, bleu clair et rose sont échantillonnés sur les photos des
+-- bagues. Blanc est un blanc cassé choisi : sur la photo, la nacre est si
+-- réchauffée par l'éclairage (#EAD9CB) qu'une pastille fidèle se confondrait
+-- avec le fond crème du site. Argent, marron, jaune et noir restent à caler
+-- sur leurs photos.
 insert into colors (slug, code, name, hex, position) values
-  ('or',          'OR', 'Or',          '#C9A227', 1),
+  ('or',          'OR', 'Or',          '#F0C070', 1),
   ('argent',      'AR', 'Argent',      '#C0C0C0', 2),
-  ('bleu-fonce',  'BF', 'Bleu foncé',  '#1B3A6B', 3),
-  ('bleu-clair',  'BC', 'Bleu clair',  '#7FB3D5', 4),
+  ('bleu-fonce',  'BF', 'Bleu foncé',  '#001048', 3),
+  ('bleu-clair',  'BC', 'Bleu clair',  '#A0B0B0', 4),
   ('marron',      'MA', 'Marron',      '#6B4226', 5),
-  ('rose',        'RO', 'Rose',        '#E8A0B4', 6),
+  ('rose',        'RO', 'Rose',        '#E8A8A8', 6),
   ('jaune',       'JA', 'Jaune',       '#F2C744', 7),
-  ('blanc',       'BL', 'Blanc',       '#F5F5F0', 8),
+  ('blanc',       'BL', 'Blanc',       '#F4F1EC', 8),
   ('noir',        'NO', 'Noir',        '#1A1A1A', 9)
 on conflict (slug) do update set
   code     = excluded.code,
@@ -52,22 +56,12 @@ on conflict (slug) do update set
   position = excluded.position;
 
 -- -----------------------------------------------------------------------------
--- Tailles de bagues : 52 → 60
+-- Tailles
 -- -----------------------------------------------------------------------------
-insert into sizes (slug, label, position)
-select g::text, g::text, g - 51
-from generate_series(52, 60) as g
-on conflict (slug) do update set
-  label    = excluded.label,
-  position = excluded.position;
-
--- Rattachement : seules les bagues ont un sélecteur de taille.
-insert into category_sizes (category_id, size_id, position)
-select c.id, s.id, s.position
-from categories c
-  join sizes s on true
-where c.slug = 'bagues'
-on conflict (category_id, size_id) do update set position = excluded.position;
+-- Aucune : tout le catalogue est en taille unique, bagues comprises.
+-- Les tables `sizes` et `category_sizes` restent disponibles — le jour où une
+-- catégorie sera déclinée en tailles, il suffira d'y ajouter des lignes et de
+-- créer une variante par taille : le sélecteur apparaît alors tout seul.
 
 -- -----------------------------------------------------------------------------
 -- Produits bijoux : une fiche par couple catégorie × couleur (36)
@@ -118,24 +112,7 @@ on conflict (slug) do update set
   position    = excluded.position;
 
 -- -----------------------------------------------------------------------------
--- Variantes avec taille (bagues) : 9 couleurs × 9 tailles = 81
--- -----------------------------------------------------------------------------
-insert into product_variants (product_id, size_id, sku, stock, position)
-select
-  p.id,
-  s.id,
-  'LJ-' || c.code || '-' || col.code || '-' || s.slug,
-  0,
-  cs.position
-from products p
-  join categories c      on c.id = p.category_id
-  join category_sizes cs on cs.category_id = c.id
-  join sizes s           on s.id = cs.size_id
-  join colors col        on col.id = p.color_id
-on conflict do nothing;
-
--- -----------------------------------------------------------------------------
--- Variantes uniques (tout produit dont la catégorie n'a pas de tailles) : 29
+-- Variantes : une seule par fiche (taille unique) = 38
 -- -----------------------------------------------------------------------------
 insert into product_variants (product_id, size_id, sku, stock, position)
 select
@@ -149,3 +126,22 @@ from products p
   left join colors col on col.id = p.color_id
 where not exists (select 1 from category_sizes cs where cs.category_id = c.id)
 on conflict do nothing;
+
+-- -----------------------------------------------------------------------------
+-- Photos produits
+-- -----------------------------------------------------------------------------
+-- Fichiers servis depuis /public. Le jour où les photos passeront sur Supabase
+-- Storage, seule cette URL change (la colonne accepte aussi une URL absolue).
+insert into product_images (product_id, url, alt, position, is_primary)
+select p.id, v.url, v.alt, 0, true
+from products p
+  join (values
+    ('bague-or',         '/produits/bague-or.webp',         'Bague trèfle LINÉ, finition or'),
+    ('bague-blanc',      '/produits/bague-blanc.webp',      'Bague trèfle LINÉ, nacre blanche'),
+    ('bague-rose',       '/produits/bague-rose.webp',       'Bague trèfle LINÉ, nacre rose'),
+    ('bague-bleu-clair', '/produits/bague-bleu-clair.webp', 'Bague trèfle LINÉ, nacre bleu clair'),
+    ('bague-bleu-fonce', '/produits/bague-bleu-fonce.webp', 'Bague trèfle LINÉ, laque bleu foncé')
+  ) as v (slug, url, alt) on v.slug = p.slug
+where not exists (
+  select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
+);

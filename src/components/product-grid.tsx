@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/format";
 import type { CatalogProduct } from "@/types/catalog";
@@ -16,13 +17,14 @@ export function ProductGrid({ products }: { products: CatalogProduct[] }) {
       {products.map((product) => (
         <li key={product.id}>
           <Link href={`/produit/${product.slug}`} className="group block">
-            <div className="aspect-square overflow-hidden border border-line bg-sand">
+            <div className="relative aspect-square overflow-hidden border border-line bg-sand">
               {product.image_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={product.image_url}
                   alt={product.image_alt ?? product.name}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
                 <div
