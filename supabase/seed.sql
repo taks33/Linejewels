@@ -139,17 +139,9 @@ on conflict do nothing;
 -- Fichiers servis depuis /public. Le jour où les photos passeront sur Supabase
 -- Storage, seule cette URL change (la colonne accepte aussi une URL absolue).
 --
--- Une seule photo par fiche pour l'instant, donc `is_primary = true` partout.
--- Pour ajouter d'autres angles à un produit, insérer des lignes supplémentaires
--- avec `is_primary = false` et une `position` croissante :
---
---   insert into product_images (product_id, url, alt, position, is_primary)
---   select p.id, '/produits/bague-or-2.webp', 'Bague or, portée', 1, false
---   from products p where p.slug = 'bague-or';
---
--- La couverture (grille boutique) reste la photo `is_primary` ; la fiche
--- produit affiche toutes les photos dans un carrousel, dans l'ordre de
--- `position`. Une seule couverture par produit : un index unique l'impose.
+-- La couverture (`is_primary`) est la photo de la grille boutique : une seule
+-- par produit, un index unique l'impose. La fiche produit affiche toutes les
+-- photos en carrousel, dans l'ordre de `position`.
 insert into product_images (product_id, url, alt, position, is_primary)
 select p.id, v.url, v.alt, 0, true
 from products p
@@ -247,6 +239,30 @@ from products p
      '/produits/collier-noir.webp',
      'Collier LINÉ à cinq trèfles, onyx noir')
   ) as v (slug, url, alt) on v.slug = p.slug
+where not exists (
+  select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
+);
+
+-- Angles supplémentaires : même produit, `is_primary = false`, `position`
+-- croissante. Ils alimentent le carrousel de la fiche sans changer la
+-- couverture affichée dans la grille boutique.
+insert into product_images (product_id, url, alt, position, is_primary)
+select p.id, v.url, v.alt, v.position, false
+from products p
+  join (values
+    ('bague-argent', '/produits/bague-argent-2.webp',
+     'Bague trèfle LINÉ argent, portée à la main', 1),
+    ('bague-argent', '/produits/bague-argent-3.webp',
+     'Bague trèfle LINÉ argent, avec le collier, le bracelet et les boucles assortis', 2),
+    ('bague-or', '/produits/bague-or-2.webp',
+     'Bague trèfle LINÉ or, portée à la main', 1),
+    ('bague-blanc', '/produits/bague-blanc-2.webp',
+     'Bague trèfle LINÉ nacre blanche, portée à la main', 1),
+    ('bague-jaune', '/produits/bague-jaune-2.webp',
+     'Bague trèfle LINÉ jaune, portée à la main', 1),
+    ('bague-rose', '/produits/bague-rose-2.webp',
+     'Bague trèfle LINÉ rose, portée à la main', 1)
+  ) as v (slug, url, alt, position) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
 );
