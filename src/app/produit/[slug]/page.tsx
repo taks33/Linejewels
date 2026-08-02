@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ProductGallery } from "@/components/product-gallery";
 import { ProductPurchase } from "@/components/product-purchase";
 import { getProductBySlug } from "@/lib/catalog";
 
@@ -24,38 +24,13 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const placeholderStyle = product.color
-    ? { backgroundColor: `color-mix(in srgb, ${product.color.hex} 14%, #f4ede3)` }
-    : undefined;
-
   return (
     <article className="grid gap-16 lg:grid-cols-2">
-      <div className="space-y-4">
-        {product.images.length > 0 ? (
-          product.images.map((image, index) => (
-            <div
-              key={image.id}
-              className="relative aspect-square overflow-hidden border border-line bg-sand"
-            >
-              <Image
-                src={image.url}
-                alt={image.alt ?? product.name}
-                fill
-                priority={index === 0}
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-          ))
-        ) : (
-          <div
-            className="flex aspect-square items-center justify-center border border-line bg-sand text-[0.65rem] uppercase tracking-[0.25em] text-muted/60"
-            style={placeholderStyle}
-          >
-            Photo à venir
-          </div>
-        )}
-      </div>
+      <ProductGallery
+        images={product.images}
+        productName={product.name}
+        placeholderColor={product.color?.hex}
+      />
 
       <div className="space-y-10 lg:pt-6">
         <header className="space-y-3">

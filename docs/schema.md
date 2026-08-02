@@ -82,5 +82,8 @@ Ajouter une couleur : une ligne dans `colors`, puis une fiche par catégorie
 rattachement dans `category_sizes`, et une variante par taille — le sélecteur de taille
 de la fiche apparaît automatiquement dès qu'une variante porte une taille.
 
-Ajouter une photo : une ligne dans `product_images` (`is_primary` pour la vignette de
-grille, `position` pour l'ordre sur la fiche).
+Ajouter une photo : une ligne dans `product_images`. `is_primary = true` désigne la
+couverture — celle qui sort dans la grille boutique, une seule par produit (un index
+unique l'impose). Les autres angles prennent `is_primary = false` et une `position`
+croissante ; la fiche produit les enchaîne dans un carrousel. Aucun changement de
+schéma ni de code n'est nécessaire pour passer de une à dix photos par produit.

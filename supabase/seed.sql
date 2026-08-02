@@ -138,6 +138,18 @@ on conflict do nothing;
 -- -----------------------------------------------------------------------------
 -- Fichiers servis depuis /public. Le jour où les photos passeront sur Supabase
 -- Storage, seule cette URL change (la colonne accepte aussi une URL absolue).
+--
+-- Une seule photo par fiche pour l'instant, donc `is_primary = true` partout.
+-- Pour ajouter d'autres angles à un produit, insérer des lignes supplémentaires
+-- avec `is_primary = false` et une `position` croissante :
+--
+--   insert into product_images (product_id, url, alt, position, is_primary)
+--   select p.id, '/produits/bague-or-2.webp', 'Bague or, portée', 1, false
+--   from products p where p.slug = 'bague-or';
+--
+-- La couverture (grille boutique) reste la photo `is_primary` ; la fiche
+-- produit affiche toutes les photos dans un carrousel, dans l'ordre de
+-- `position`. Une seule couverture par produit : un index unique l'impose.
 insert into product_images (product_id, url, alt, position, is_primary)
 select p.id, v.url, v.alt, 0, true
 from products p
