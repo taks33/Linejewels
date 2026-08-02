@@ -34,21 +34,25 @@ on conflict (slug) do update set
 -- Couleurs
 -- -----------------------------------------------------------------------------
 -- `hex` = pastille affichée dans les filtres et le sélecteur de couleur.
--- Or, bleu foncé, bleu clair et rose sont échantillonnés sur les photos des
--- bagues. Blanc est un blanc cassé choisi : sur la photo, la nacre est si
--- réchauffée par l'éclairage (#EAD9CB) qu'une pastille fidèle se confondrait
--- avec le fond crème du site. Argent, marron, jaune et noir restent à caler
--- sur leurs photos.
+-- Huit teintes sur neuf sont échantillonnées sur les photos des bagues.
+-- Deux écarts assumés :
+--   * blanc : sur la photo, la nacre est si réchauffée par l'éclairage
+--     (#EAD9CB) qu'une pastille fidèle se confondrait avec le fond du site ;
+--     on garde un blanc cassé lisible.
+--   * marron : la pierre photographiée est un rouge sombre (cornaline), pas
+--     un brun. La pastille suit la photo ; c'est le libellé « Marron » qui
+--     reste à trancher.
+-- Argent reste à caler sur sa photo.
 insert into colors (slug, code, name, hex, position) values
   ('or',          'OR', 'Or',          '#F0C070', 1),
   ('argent',      'AR', 'Argent',      '#C0C0C0', 2),
   ('bleu-fonce',  'BF', 'Bleu foncé',  '#001048', 3),
   ('bleu-clair',  'BC', 'Bleu clair',  '#A0B0B0', 4),
-  ('marron',      'MA', 'Marron',      '#6B4226', 5),
+  ('marron',      'MA', 'Marron',      '#4F0201', 5),
   ('rose',        'RO', 'Rose',        '#E8A8A8', 6),
-  ('jaune',       'JA', 'Jaune',       '#F2C744', 7),
+  ('jaune',       'JA', 'Jaune',       '#F8C152', 7),
   ('blanc',       'BL', 'Blanc',       '#F4F1EC', 8),
-  ('noir',        'NO', 'Noir',        '#1A1A1A', 9)
+  ('noir',        'NO', 'Noir',        '#0D0B09', 9)
 on conflict (slug) do update set
   code     = excluded.code,
   name     = excluded.name,
@@ -140,7 +144,10 @@ from products p
     ('bague-blanc',      '/produits/bague-blanc.webp',      'Bague trèfle LINÉ, nacre blanche'),
     ('bague-rose',       '/produits/bague-rose.webp',       'Bague trèfle LINÉ, nacre rose'),
     ('bague-bleu-clair', '/produits/bague-bleu-clair.webp', 'Bague trèfle LINÉ, nacre bleu clair'),
-    ('bague-bleu-fonce', '/produits/bague-bleu-fonce.webp', 'Bague trèfle LINÉ, laque bleu foncé')
+    ('bague-bleu-fonce', '/produits/bague-bleu-fonce.webp', 'Bague trèfle LINÉ, laque bleu foncé'),
+    ('bague-jaune',      '/produits/bague-jaune.webp',      'Bague trèfle LINÉ, pierre jaune ambre'),
+    ('bague-noir',       '/produits/bague-noir.webp',       'Bague trèfle LINÉ, onyx noir'),
+    ('bague-marron',     '/produits/bague-marron.webp',     'Bague trèfle LINÉ, pierre rouge sombre')
   ) as v (slug, url, alt) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
