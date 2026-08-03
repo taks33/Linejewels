@@ -261,7 +261,17 @@ from products p
     ('bague-jaune', '/produits/bague-jaune-2.webp',
      'Bague trèfle LINÉ jaune, portée à la main', 1),
     ('bague-rose', '/produits/bague-rose-2.webp',
-     'Bague trèfle LINÉ rose, portée à la main', 1)
+     'Bague trèfle LINÉ rose, portée à la main', 1),
+    ('bague-bleu-clair', '/produits/bague-bleu-clair-2.webp',
+     'Bague trèfle LINÉ bleu clair, portée à la main', 1),
+    ('bague-bleu-fonce', '/produits/bague-bleu-fonce-2.webp',
+     'Bague trèfle LINÉ bleu foncé, portée à la main', 1),
+    ('bague-bleu-fonce', '/produits/bague-bleu-fonce-3.webp',
+     'Bague trèfle LINÉ bleu foncé, avec le collier, le bracelet et les boucles assortis', 2),
+    ('bague-marron', '/produits/bague-marron-2.webp',
+     'Bague trèfle LINÉ rouge sombre, portée à la main', 1),
+    ('bague-noir', '/produits/bague-noir-2.webp',
+     'Bague trèfle LINÉ noire, portée à la main', 1)
   ) as v (slug, url, alt, position) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
