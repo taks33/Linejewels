@@ -33,10 +33,13 @@ Ce que contient le catalogue au lancement :
 
 - 4 catégories bijoux × 9 couleurs = **36 fiches**, plus **2 fiches lunettes** = 38 produits
 - tout en **taille unique** : une variante achetable par fiche, soit 38 variantes
-- **47 photos** pour 36 fiches illustrées : les 36 bijoux ont leur couverture, les
-  9 bagues ont un porté en second, et deux d'entre elles (argent, bleu foncé) un plan
-  de la parure en troisième — le tout en carrousel sur la fiche. Ne manquent que les
-  2 lunettes. Servies depuis `public/produits/`
+- **73 photos** pour 36 fiches illustrées, affichées en carrousel :
+  - une couverture par bijou (36) ;
+  - un porté pour chacune des 9 bagues ;
+  - un plan de parure par couleur (7 sur 9 : marron et noir manquent), partagé par
+    les 4 fiches de cette couleur.
+
+  Ne manquent que les 2 lunettes. Servies depuis `public/produits/`
 - **tous les prix à 0 €** — placeholder à remplacer avant l'ouverture
 
 ## Direction artistique

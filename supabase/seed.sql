@@ -252,8 +252,6 @@ from products p
   join (values
     ('bague-argent', '/produits/bague-argent-2.webp',
      'Bague trèfle LINÉ argent, portée à la main', 1),
-    ('bague-argent', '/produits/bague-argent-3.webp',
-     'Bague trèfle LINÉ argent, avec le collier, le bracelet et les boucles assortis', 2),
     ('bague-or', '/produits/bague-or-2.webp',
      'Bague trèfle LINÉ or, portée à la main', 1),
     ('bague-blanc', '/produits/bague-blanc-2.webp',
@@ -266,8 +264,6 @@ from products p
      'Bague trèfle LINÉ bleu clair, portée à la main', 1),
     ('bague-bleu-fonce', '/produits/bague-bleu-fonce-2.webp',
      'Bague trèfle LINÉ bleu foncé, portée à la main', 1),
-    ('bague-bleu-fonce', '/produits/bague-bleu-fonce-3.webp',
-     'Bague trèfle LINÉ bleu foncé, avec le collier, le bracelet et les boucles assortis', 2),
     ('bague-marron', '/produits/bague-marron-2.webp',
      'Bague trèfle LINÉ rouge sombre, portée à la main', 1),
     ('bague-noir', '/produits/bague-noir-2.webp',
@@ -276,3 +272,35 @@ from products p
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
 );
+
+-- -----------------------------------------------------------------------------
+-- Plans de parure
+-- -----------------------------------------------------------------------------
+-- Une même photo montre les quatre pièces d'une couleur (collier, bracelet,
+-- boucles, bague). Elle est rattachée aux quatre fiches de cette couleur, en
+-- `position` 2 : troisième photo du carrousel dès que le porté (position 1)
+-- existe, deuxième en attendant.
+-- Marron et noir n'ont pas encore de plan de parure.
+insert into product_images (product_id, url, alt, position, is_primary)
+select
+  p.id,
+  v.url,
+  'Parure LINÉ ' || lower(c.name) || ' : collier, bracelet, boucles d''oreilles et bague',
+  2,
+  false
+from products p
+  join colors c      on c.id = p.color_id
+  join categories cat on cat.id = p.category_id
+  join (values
+    ('or',         '/produits/parure-or.webp'),
+    ('argent',     '/produits/parure-argent.webp'),
+    ('bleu-fonce', '/produits/parure-bleu-fonce.webp'),
+    ('bleu-clair', '/produits/parure-bleu-clair.webp'),
+    ('rose',       '/produits/parure-rose.webp'),
+    ('jaune',      '/produits/parure-jaune.webp'),
+    ('blanc',      '/produits/parure-blanc.webp')
+  ) as v (color_slug, url) on v.color_slug = c.slug
+where cat.has_colors
+  and not exists (
+    select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
+  );
