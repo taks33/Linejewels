@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/*
+ * Palette LINÉ — nuances de beige tirées du logo.
+ * Le beige de référence (#CDBBA3) est échantillonné directement sur le
+ * wordmark ; toute la gamme est construite autour.
+ */
+@theme {
+  --color-cream: #fbf8f3; /* fond de page */
+  --color-sand: #f4ede3; /* cartes, surfaces */
+  --color-dune: #eae0d2; /* survol, aplats photo */
+  --color-line: #dcd0be; /* filets et bordures */
+  --color-brand: #cdbba3; /* beige du logo */
+  --color-clay: #a8977e; /* beige foncé : liens, focus */
+  --color-ink: #2a2521; /* texte principal */
+  --color-muted: #746a5d; /* texte secondaire */
+  --color-night: #121110; /* bandeaux et boutons pleins */
+
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+
+  --tracking-wordmark: 0.35em;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 300;
+}
+
+::selection {
+  background-color: var(--color-brand);
+  color: var(--color-night);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-clay);
+  outline-offset: 3px;
+}
