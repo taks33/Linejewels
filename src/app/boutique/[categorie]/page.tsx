@@ -43,6 +43,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         colors={colors}
         activeCategory={category.slug}
         activeColors={activeColors}
+        showColors={category.has_colors}
       />
       <ProductGrid products={products} />
     </div>

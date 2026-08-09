@@ -8,13 +8,21 @@ type Props = {
   activeCategory?: string;
   /** Slugs de couleurs actives (filtres cumulables). */
   activeColors: string[];
+  /** false sur une catégorie sans déclinaison couleur : le filtre n'aurait rien à filtrer. */
+  showColors?: boolean;
 };
 
 /**
  * Filtres catégorie / couleur. Purement basés sur l'URL : chaque filtre est un
  * lien, la grille est rendue côté serveur.
  */
-export function CatalogFilters({ categories, colors, activeCategory, activeColors }: Props) {
+export function CatalogFilters({
+  categories,
+  colors,
+  activeCategory,
+  activeColors,
+  showColors = true,
+}: Props) {
   const basePath = activeCategory ? `/boutique/${activeCategory}` : "/boutique";
 
   const colorHref = (slug: string) => {
@@ -55,36 +63,40 @@ export function CatalogFilters({ categories, colors, activeCategory, activeColor
         ))}
       </nav>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="mr-2 text-[0.65rem] uppercase tracking-[0.25em] text-muted">Couleur</span>
-        {colors.map((color) => {
-          const isActive = activeColors.includes(color.slug);
-          return (
-            <Link
-              key={color.id}
-              href={colorHref(color.slug)}
-              aria-pressed={isActive}
-              className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition-colors ${
-                isActive
-                  ? "border-clay bg-dune text-ink"
-                  : "border-line text-muted hover:border-clay hover:text-ink"
-              }`}
-            >
-              <span
-                aria-hidden
-                className="h-3 w-3 rounded-full border border-ink/15"
-                style={{ backgroundColor: color.hex }}
-              />
-              {color.name}
+      {showColors && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-2 text-[0.65rem] uppercase tracking-[0.25em] text-muted">
+            Couleur
+          </span>
+          {colors.map((color) => {
+            const isActive = activeColors.includes(color.slug);
+            return (
+              <Link
+                key={color.id}
+                href={colorHref(color.slug)}
+                aria-pressed={isActive}
+                className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                  isActive
+                    ? "border-clay bg-dune text-ink"
+                    : "border-line text-muted hover:border-clay hover:text-ink"
+                }`}
+              >
+                <span
+                  aria-hidden
+                  className="h-3 w-3 rounded-full border border-ink/15"
+                  style={{ backgroundColor: color.hex }}
+                />
+                {color.name}
+              </Link>
+            );
+          })}
+          {activeColors.length > 0 && (
+            <Link href={basePath} className="ml-2 text-xs text-clay underline underline-offset-4">
+              Effacer
             </Link>
-          );
-        })}
-        {activeColors.length > 0 && (
-          <Link href={basePath} className="ml-2 text-xs text-clay underline underline-offset-4">
-            Effacer
-          </Link>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

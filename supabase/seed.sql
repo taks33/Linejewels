@@ -237,7 +237,13 @@ from products p
      'Collier LINÉ à cinq trèfles, pierre rouge sombre'),
     ('collier-noir',
      '/produits/collier-noir.webp',
-     'Collier LINÉ à cinq trèfles, onyx noir')
+     'Collier LINÉ à cinq trèfles, onyx noir'),
+    ('lunettes-de-soleil-style-1',
+     '/produits/lunettes-de-soleil-style-1.webp',
+     'Lunettes de soleil LINÉ, monture ovale dorée et verres noirs'),
+    ('lunettes-de-soleil-style-2',
+     '/produits/lunettes-de-soleil-style-2.webp',
+     'Lunettes de soleil LINÉ, monture hexagonale sans cerclage')
   ) as v (slug, url, alt) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
@@ -267,7 +273,9 @@ from products p
     ('bague-marron', '/produits/bague-marron-2.webp',
      'Bague trèfle LINÉ rouge sombre, portée à la main', 1),
     ('bague-noir', '/produits/bague-noir-2.webp',
-     'Bague trèfle LINÉ noire, portée à la main', 1)
+     'Bague trèfle LINÉ noire, portée à la main', 1),
+    ('lunettes-de-soleil-style-1', '/produits/lunettes-de-soleil-style-1-2.webp',
+     'Lunettes de soleil LINÉ ovales, vue de trois quarts', 1)
   ) as v (slug, url, alt, position) on v.slug = p.slug
 where not exists (
   select 1 from product_images pi where pi.product_id = p.id and pi.url = v.url
@@ -280,7 +288,6 @@ where not exists (
 -- boucles, bague). Elle est rattachée aux quatre fiches de cette couleur, en
 -- `position` 2 : troisième photo du carrousel dès que le porté (position 1)
 -- existe, deuxième en attendant.
--- Marron et noir n'ont pas encore de plan de parure.
 insert into product_images (product_id, url, alt, position, is_primary)
 select
   p.id,
@@ -298,7 +305,9 @@ from products p
     ('bleu-clair', '/produits/parure-bleu-clair.webp'),
     ('rose',       '/produits/parure-rose.webp'),
     ('jaune',      '/produits/parure-jaune.webp'),
-    ('blanc',      '/produits/parure-blanc.webp')
+    ('blanc',      '/produits/parure-blanc.webp'),
+    ('marron',     '/produits/parure-marron.webp'),
+    ('noir',       '/produits/parure-noir.webp')
   ) as v (color_slug, url) on v.color_slug = c.slug
 where cat.has_colors
   and not exists (
